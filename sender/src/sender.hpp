@@ -16,8 +16,8 @@ class Sender
     using AsioCtx  = asio::io_context;
     using Socket   = asio::ip::tcp::socket;
 
-    Socket      socket_ = Socket(ctx_);
     AsioCtx     ctx_    = {};
+    Socket      socket_ = Socket(ctx_);
     SdlGuard    guard_  = {};
     AudioStream stream_ = {};
 
