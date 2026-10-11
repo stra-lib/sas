@@ -89,6 +89,12 @@ Sender::ErrorMsg Sender::connect_socket(StrView host, StrView service)
 
 Sender::ErrorMsg Sender::set_up_audio_capture()
 {
+    std::println("set up audio capture");
+
+    auto success = SdlGuard::init(SDL_INIT_AUDIO);
+    if (not success)
+        return std::format("init audio subsystem failed: {}", *success);
+
 
 
 

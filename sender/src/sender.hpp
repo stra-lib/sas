@@ -5,6 +5,7 @@
 #include <string_view>
 #include <optional>
 #include <asio.hpp>
+#include "sdl_guard.hpp"
 
 
 class Sender
@@ -14,8 +15,9 @@ class Sender
     using AsioCtx  = asio::io_context;
     using Socket   = asio::ip::tcp::socket;
 
-    AsioCtx ctx     = {};
-    Socket  socket  = Socket(ctx);
+    SdlGuard guard  = {};
+    AsioCtx  ctx    = {};
+    Socket   socket = Socket(ctx);
 
     ErrorMsg connect_socket(StrView host, StrView service);
     ErrorMsg set_up_audio_capture();
