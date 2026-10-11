@@ -77,10 +77,10 @@ Sender::ErrorMsg Sender::connect_socket(StrView host, StrView service)
 {
     std::println("connecting to {}:{}", host, service);
 
-    auto endpoints = try_resolve_endpoints(ctx, host, service);
+    auto endpoints = try_resolve_endpoints(ctx_, host, service);
     if (not endpoints) return endpoints.error().message();
 
-    auto error = try_connect(socket, *endpoints, host, service);
+    auto error = try_connect(socket_, *endpoints, host, service);
     if (error) return error.message();
 
     print_replace_last_line("finished connecting to {}:{}", host, service);
@@ -91,9 +91,11 @@ Sender::ErrorMsg Sender::set_up_audio_capture()
 {
     std::println("set up audio capture");
 
-    auto success = SdlGuard::init(SDL_INIT_AUDIO);
-    if (not success)
-        return std::format("init audio subsystem failed: {}", *success);
+    if (const auto success = SdlGuard::init(SDL_INIT_AUDIO); not success)
+        return std::format("SdlGuard::init failed: {}", *success);
+
+    if (const auto success = stream_.initialize(); not success)
+        return std::format("AudioStream::initialize failed: {}", *success);
 
 
 
