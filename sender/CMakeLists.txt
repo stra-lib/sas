@@ -13,6 +13,8 @@ add_executable(sender
         src/main.cpp
         src/sender.cpp
         src/sender.hpp
+        src/win_capture.cpp
+        src/win_capture.hpp
 )
 
 target_link_libraries(sender

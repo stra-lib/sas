@@ -91,15 +91,25 @@ Sender::ErrorMsg Sender::set_up_audio_capture()
 {
     std::println("set up audio capture");
 
-    if (const auto success = SdlGuard::init(SDL_INIT_AUDIO); not success)
-        return std::format("SdlGuard::init failed: {}", *success);
+    if (const auto failed = SdlGuard::init(SDL_INIT_AUDIO))
+        return std::format("SdlGuard::init failed: {}", *failed);
 
-    if (const auto success = stream_.initialize(); not success)
-        return std::format("AudioStream::initialize failed: {}", *success);
+    if (const auto failed = stream_->initialize())
+        return std::format("AudioStream::initialize failed: {}", *failed);
 
+    if (const auto failed = capture_.initialize())
+        return std::format("WinCapture::initialize failed: {}", *failed);
 
+    const auto format = capture_.get_format();
+    if (not format) return
+            std::format("WinCapture::get_format failed: {}", format.error());
 
+    if (const auto failed = stream_->set_input_format(*format)) return
+            std::format("AudioStream::set_input_format failed: {}", *failed);
 
+    capture_.set_output(stream_);
+
+    print_replace_last_line("finished set up audio capture");
     return std::nullopt;
 }
 
