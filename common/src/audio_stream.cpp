@@ -50,13 +50,21 @@ AudioStream::ErrorMsg AudioStream::put_audio_data(
     return std::nullopt;
 }
 
-AudioStream::ErrorMsg AudioStream::get_audio_data(
-        void* buf,
-        int&  len) const
+AudioStream::ExpInt32 AudioStream::get_audio_data(
+        void*     buf,
+        const int len) const
 {
-    if (not stream_) return "uninitialized audio stream";
-    len = SDL_GetAudioStreamData(stream_, buf, std::numeric_limits<int>::max());
-    if (len < 0) return SDL_GetError();
-    return std::nullopt;
+    if (not stream_) return std::unexpected("uninitialized audio stream");
+    int read = SDL_GetAudioStreamData(stream_, buf, len);
+    if (read < 0) return std::unexpected(SDL_GetError());
+    return read;
+}
+
+AudioStream::ExpInt32 AudioStream::get_available_bytes_count() const
+{
+    if (not stream_) return std::unexpected("uninitialized audio stream");
+    int count = SDL_GetAudioStreamAvailable(stream_);
+    if (count < 0) return std::unexpected(SDL_GetError());
+    return count;
 }
 

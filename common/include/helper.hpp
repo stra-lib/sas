@@ -6,6 +6,7 @@
 #include <expected>
 #include <future>
 #include <string_view>
+#include <vector>
 
 
 template<typename T>
@@ -26,5 +27,13 @@ asio::error_code connect_to(
         asio::ip::tcp::socket& socket,
         const ResolverResult&  endpoints);
 
+asio::awaitable<asio::error_code> simple_send(
+        asio::ip::tcp::socket& socket,
+        const void* buf,
+        size_t      len);
+
+asio::awaitable<asio::error_code> simple_receive(
+        asio::ip::tcp::socket&  socket,
+        std::vector<std::byte>& buf);
 
 #endif //SAS_HELPER_HPP_
