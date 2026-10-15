@@ -2,11 +2,9 @@
 
 #include <audioclient.h>
 #include <format>
-#include <ksmedia.h>
 #include <mmdeviceapi.h>
 #include <mmreg.h>
 #include <utility>
-#include <cstddef>
 #include <vector>
 #include <windows.h>
 

@@ -1,14 +1,15 @@
 #ifndef SAS_WIN_CAPTURE_HPP_
 #define SAS_WIN_CAPTURE_HPP_
 
-#include <SDL3/SDL_audio.h>
-#include <thread>
 #include <atomic>
 #include <expected>
 #include <optional>
 #include <string>
-#include "audio_stream.hpp"
+#include <thread>
+#include <SDL3/SDL_audio.h>
+
 #include "atomic_single_slot.hpp"
+#include "audio_stream.hpp"
 
 
 class WinCapture

@@ -1,10 +1,12 @@
 #include "sender.hpp"
-#include <print>
-#include <future>
+
 #include <functional>
-#include "helper.hpp"
-#include "animation.hpp"
+#include <future>
+#include <print>
+
 #include "advanced_print.hpp"
+#include "animation.hpp"
+#include "helper.hpp"
 
 
 static std::expected<ResolverResult, asio::error_code> try_resolve_endpoints(
@@ -64,10 +66,10 @@ static asio::error_code try_connect(
     while (not is_done(async_ec))
     {
         print_replace_last_line(
-            "connecting to {}:{} {}",
-            host,
-            service,
-            animation.wait_until_next_frame());
+                "connecting to {}:{} {}",
+                host,
+                service,
+                animation.wait_until_next_frame());
     }
 
     return async_ec.get();
@@ -101,21 +103,22 @@ Sender::ErrorMsg Sender::set_up_audio_capture()
         return std::format("WinCapture::initialize failed: {}", *failed);
 
     const auto format = capture_.get_format();
-    if (not format) return
-            std::format("WinCapture::get_format failed: {}", format.error());
-
-    if (const auto failed = stream_->set_input_format(*format)) return
-            std::format("AudioStream::set_input_format failed: {}", *failed);
+    if (not format)
+        return std::format(
+                "WinCapture::get_format failed: {}",
+                format.error());
+    if (const auto failed = stream_->set_input_format(*format))
+        return std::format(
+                "AudioStream::set_input_format failed: {}",
+                *failed);
 
     capture_.set_output(stream_);
 
-    SDL_AudioSpec spec = {};
-    spec.channels = 2;
-    spec.freq     = 48000;
-    spec.format   = SDL_AUDIO_F32LE;
-
-    if (const auto failed = stream_->set_output_format(spec)) return
-            std::format("AudioStream::set_output_format failed: {}", *failed);
+    constexpr auto spec = SDL_AudioSpec(SDL_AUDIO_F32LE, 2, 48000);
+    if (const auto failed = stream_->set_output_format(spec))
+        return std::format(
+                "AudioStream::set_output_format failed: {}",
+                *failed);
 
     print_replace_last_line("finished set up audio capture");
     return std::nullopt;

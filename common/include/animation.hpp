@@ -1,8 +1,8 @@
 #ifndef SAS_ANIMATION_HPP_
 #define SAS_ANIMATION_HPP_
 
-#include <chrono>
 #include <array>
+#include <chrono>
 #include <format>
 
 
