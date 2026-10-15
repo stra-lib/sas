@@ -32,7 +32,7 @@ static std::expected<ResolverResult, asio::error_code> try_resolve_endpoints(
             service);
 
     print_replace_last_line(
-            "resolve {}:{} {}",
+            "-- resolve {}:{} {}",
             host,
             service,
             animation.get());
@@ -40,7 +40,7 @@ static std::expected<ResolverResult, asio::error_code> try_resolve_endpoints(
     while (not is_done(async_endpoints))
     {
         print_replace_last_line(
-                "resolve {}:{} {}",
+                "-- resolve {}:{} {}",
                 host,
                 service,
                 animation.wait_until_next_frame());
@@ -65,7 +65,7 @@ static asio::error_code try_connect(
             std::ref(result));
 
     print_replace_last_line(
-            "connecting to {}:{} {}",
+            "-- connecting to {}:{} {}",
             host,
             service,
             animation.get());
@@ -73,7 +73,7 @@ static asio::error_code try_connect(
     while (not is_done(async_ec))
     {
         print_replace_last_line(
-                "connecting to {}:{} {}",
+                "-- connecting to {}:{} {}",
                 host,
                 service,
                 animation.wait_until_next_frame());
@@ -215,7 +215,7 @@ Sender::CoErrMsg Sender::run_sharing_async()
 
 Sender::ErrorMsg Sender::connect_socket(StrView host, StrView service)
 {
-    std::println("connecting to {}:{}", host, service);
+    std::println("-- connecting to {}:{}", host, service);
 
     auto endpoints = try_resolve_endpoints(ctx_, host, service);
     if (not endpoints) return endpoints.error().message();
@@ -223,13 +223,13 @@ Sender::ErrorMsg Sender::connect_socket(StrView host, StrView service)
     if (const auto failed = try_connect(socket_, *endpoints, host, service))
         return failed.message();
 
-    print_replace_last_line("finished connecting to {}:{}", host, service);
+    print_replace_last_line("-- finished connecting to {}:{}", host, service);
     return std::nullopt;
 }
 
 Sender::ErrorMsg Sender::set_up_audio_capture()
 {
-    std::println("set up audio capture");
+    std::println("-- set up audio capture");
 
     if (const auto failed = SdlGuard::init(SDL_INIT_AUDIO))
         return std::format("SdlGuard::init failed: {}", *failed);
@@ -258,7 +258,7 @@ Sender::ErrorMsg Sender::set_up_audio_capture()
                 "AudioStream::set_output_format failed: {}",
                 *failed);
 
-    print_replace_last_line("finished set up audio capture");
+    print_replace_last_line("-- finished set up audio capture");
     return std::nullopt;
 }
 
