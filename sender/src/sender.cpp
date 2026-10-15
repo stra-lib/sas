@@ -109,6 +109,14 @@ Sender::ErrorMsg Sender::set_up_audio_capture()
 
     capture_.set_output(stream_);
 
+    SDL_AudioSpec spec = {};
+    spec.channels = 2;
+    spec.freq     = 48000;
+    spec.format   = SDL_AUDIO_F32LE;
+
+    if (const auto failed = stream_->set_output_format(spec)) return
+            std::format("AudioStream::set_output_format failed: {}", *failed);
+
     print_replace_last_line("finished set up audio capture");
     return std::nullopt;
 }
