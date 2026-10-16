@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2)
-project(sas VERSION 2026.919.0)
+project(sas VERSION 2026.1016.0)
 
 set(PROJECT_IDENTIFIER "io.github.stra-lib.sas")
 
