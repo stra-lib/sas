@@ -6,6 +6,10 @@
 #include <expected>
 #include <future>
 #include <string_view>
+#include <charconv>
+#include <system_error>
+#include <type_traits>
+#include <concepts>
 #include <vector>
 
 
@@ -14,6 +18,30 @@ bool is_done(std::future<T>& future)
 {
     using namespace std::chrono_literals;
     return future.wait_for(0ms) == std::future_status::ready;
+}
+
+template<typename T>
+requires std::integral<T>
+         && (not std::is_same_v<T, bool>)
+         && (not std::is_same_v<T, char>)
+std::expected<T, std::string> get(std::string_view str)
+{
+    T value = 0;
+    auto [ptr, ec] = std::from_chars(
+            str.data(),
+            str.data() + str.size(),
+            value);
+
+    if (ec == std::errc::invalid_argument)
+        return std::unexpected("invalid argument");
+
+    if (ec == std::errc::result_out_of_range)
+        return std::unexpected("result out of range");
+
+    if (ptr != str.data() + str.size())
+        return std::unexpected("invalid characters");
+
+    return value;
 }
 
 using ResolverResult = asio::ip::tcp::resolver::results_type;
