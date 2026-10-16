@@ -11,6 +11,8 @@ include(dependencies/sdl3)
 
 add_executable(receiver
 	src/main.cpp
+        src/receiver.cpp
+        src/receiver.hpp
 )
 
 target_link_libraries(receiver
