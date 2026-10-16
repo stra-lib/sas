@@ -199,6 +199,8 @@ void Receiver::run(const StrView service)
         return;
     }
 
+    std::println("\nrun accept sharing on port {}", service);
+
     if (const auto error = run_accept_sharing())
     {
         std::println("\nerror: {}", *error);
