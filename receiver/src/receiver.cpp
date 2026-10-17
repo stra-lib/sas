@@ -8,6 +8,7 @@
 #include <SDL3/SDL_audio.h>
 
 #include "advanced_print.hpp"
+#include "audio_stream_debugger.hpp"
 #include "helper.hpp"
 
 
@@ -200,6 +201,13 @@ void Receiver::run(const StrView service)
     }
 
     std::println("\nrun accept sharing on port {}", service);
+
+#ifndef NDEBUG
+    auto debugger = ASDebugger(stream_);
+    debugger.add<BufferHealthProfile>();
+    debugger.set_debug_runs_per_sec(5);
+    debugger.start_debugging();
+#endif
 
     if (const auto error = run_accept_sharing())
     {
