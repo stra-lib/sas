@@ -1,13 +1,13 @@
 #ifndef SAS_AUDIO_STREAM_DEBUGGER_HPP_
 #define SAS_AUDIO_STREAM_DEBUGGER_HPP_
 
-#include <concepts>
-#include <vector>
-#include <memory>
-#include <stop_token>
-#include <mutex>
 #include <chrono>
+#include <concepts>
+#include <memory>
+#include <mutex>
+#include <stop_token>
 #include <thread>
+#include <vector>
 
 #include "audio_stream.hpp"
 
@@ -15,7 +15,7 @@
 class ASDebugProfile
 {
 public:
-    virtual ~ASDebugProfile() = 0;
+    virtual ~ASDebugProfile();
     virtual void run(AudioStream& stream) = 0;
 };
 
@@ -59,6 +59,14 @@ public:
         profiles_.emplace_back(
                 std::make_shared<Profile>(std::forward<Args>(args)...));
     }
+};
+
+class BufferHealthProfile : public ASDebugProfile
+{
+public:
+    ~BufferHealthProfile() override = default;
+
+    void run(AudioStream& stream) override;
 };
 
 #endif //SAS_AUDIO_STREAM_DEBUGGER_HPP_

@@ -1,5 +1,10 @@
 #include "audio_stream_debugger.hpp"
 
+#include "advanced_print.hpp"
+
+
+ASDebugProfile::~ASDebugProfile() = default;
+
 void ASDebugger::debug_loop(std::stop_token&& token)
 {
     auto profile = std::shared_ptr<ASDebugProfile>();
@@ -49,4 +54,25 @@ void ASDebugger::stop_debugging()
 {
     control_.request_stop();
     if (thread_.joinable()) thread_.join();
+}
+
+void BufferHealthProfile::run(AudioStream& stream)
+{
+    static bool first_run = true;
+    const auto  available = stream.get_available_bytes_count();
+    const auto  filled    = *available / 1'000;
+    const auto  empty     = 100 - filled;
+
+    if (first_run)
+    {
+        first_run = false;
+        std::println("\n");
+    }
+
+    print_replace_last_line("{:#>{}}{:.>{}}| {}",
+            "",
+            filled,
+            "",
+            empty,
+            *available);
 }
