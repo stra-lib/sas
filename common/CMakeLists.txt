@@ -5,6 +5,7 @@ add_library(common STATIC
         src/helper.cpp
         src/sdl_guard.cpp
         src/audio_stream.cpp
+        src/audio_stream_debugger.cpp
 )
 
 target_include_directories(common PUBLIC
